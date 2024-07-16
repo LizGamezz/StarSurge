@@ -1,3 +1,6 @@
 <resources>
     <string name="app_name">StarSurge</string>
+    <string name="StarSurge_Logo">Logo</string>
+    <string name="start_button">Start</string>
+    <string name="credits">Credits</string>
 </resources>
