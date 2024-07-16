@@ -15,7 +15,7 @@
         android:layout_height="411dp"
         android:layout_margin="10dp"
         android:contentDescription="@string/StarSurge_Logo"
-        android:src="@drawable/StarSurge_Logo"
+        android:src="@drawable/logo"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
@@ -46,7 +46,7 @@
         android:bottomLeftRadius="4dp"
         android:bottomRightRadius="4dp"
         android:contentDescription="@string/credits"
-        android:onClick="onHelpClick"
+        android:onClick="onCreditsClick"
         android:paddingTop="10dp"
         android:paddingBottom="10dp"
         android:src="@drawable/credits_button"

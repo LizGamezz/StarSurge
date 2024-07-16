@@ -6,10 +6,11 @@ import android.graphics.Canvas;
 import android.os.Handler;
 import android.util.AttributeSet;
 import android.view.View;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
+import android.util.DisplayMetrics;
+import android.view.WindowManager;
 
 public class EnemySpawner extends View {
     private List<Enemy> enemies;
@@ -72,7 +73,14 @@ public class EnemySpawner extends View {
         int randomIndex = random.nextInt(enemyBitmaps.length);
         Bitmap randomEnemyBitmap = enemyBitmaps[randomIndex];
 
-        float spawnX = random.nextFloat() * (spawnAreaMaxX - spawnAreaMinX) + spawnAreaMinX;
+        // Get the screen width
+        DisplayMetrics displayMetrics = new DisplayMetrics();
+        ((WindowManager) getContext().getSystemService(Context.WINDOW_SERVICE)).getDefaultDisplay().getMetrics(displayMetrics);
+        float screenWidth = displayMetrics.widthPixels;
+
+        // Calculate a random x-coordinate for spawning
+        float spawnX = random.nextFloat() * screenWidth;
+
         enemies.add(new Enemy(randomEnemyBitmap, spawnX, spawnY, enemySpeed, despawnY));
     }
 
