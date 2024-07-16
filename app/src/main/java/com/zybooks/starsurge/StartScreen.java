@@ -13,10 +13,14 @@ public class StartScreen extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.start_screen);
+    }
 
-        public void onStartGameClick (View view){
-            Intent intent = new Intent(this, MainActivity.class);
-            startActivity(intent);
+    public void onStartGameClick (View view){
+        Intent intent = new Intent(this, MainActivity.class);
+        startActivity(intent);
         }
+    public void onCreditsClick(View view){
+        Intent intent = new Intent(this, Credits.class);
+        startActivity(intent);
     }
 }

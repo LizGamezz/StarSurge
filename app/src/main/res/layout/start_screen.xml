@@ -15,7 +15,7 @@
         android:layout_height="411dp"
         android:layout_margin="10dp"
         android:contentDescription="@string/StarSurge_Logo"
-        android:src="@drawable/StarSurge_Logo"
+        android:src="@drawable/starsurge_logo"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent" />

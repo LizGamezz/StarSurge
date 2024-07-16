@@ -3,6 +3,10 @@ package com.zybooks.starsurge;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.os.Bundle;
+import androidx.appcompat.app.AppCompatActivity;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -10,20 +14,9 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        setupEnemySpawner();
     }
-    import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.os.Bundle;
-import androidx.appcompat.app.AppCompatActivity;
-
-    public class MainActivity extends AppCompatActivity {
         private EnemySpawner enemySpawner;
-
-        @Override
-        protected void onCreate(Bundle savedInstanceState) {
-            super.onCreate(savedInstanceState);
-            setupEnemySpawner();
-        }
 
         private void setupEnemySpawner() {
             enemySpawner = new EnemySpawner(this, null);
@@ -38,4 +31,3 @@ import androidx.appcompat.app.AppCompatActivity;
             enemySpawner.setEnemyBitmaps(enemyBitmaps);
         }
     }
-}
