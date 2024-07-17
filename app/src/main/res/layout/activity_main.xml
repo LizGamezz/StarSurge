@@ -13,4 +13,10 @@
         android:layout_height="match_parent"
         android:background="@drawable/space_background"/>
 
+    <FrameLayout
+        android:id="@+id/enemy_view_container"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@drawable/space_background"/>
+
 </androidx.constraintlayout.widget.ConstraintLayout>

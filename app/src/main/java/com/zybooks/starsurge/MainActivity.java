@@ -31,6 +31,28 @@ public class MainActivity extends AppCompatActivity {
         setupEnemySpawner();
     }
 
+    private void setupEnemySpawner() {
+        // Initialize enemy spawner
+        EnemySpawner enemySpawner = new EnemySpawner(this, null);
+        FrameLayout container = findViewById(R.id.enemy_view_container);
+        container.addView(enemySpawner);
+
+        Bitmap[] enemyBitmaps = {
+                BitmapFactory.decodeResource(getResources(), R.drawable.enemy1),
+                BitmapFactory.decodeResource(getResources(), R.drawable.enemy2),
+                BitmapFactory.decodeResource(getResources(), R.drawable.enemy3)
+        };
+
+        // Scale down the bitmaps
+        for (int i = 0; i < enemyBitmaps.length; i++) {
+            int width = enemyBitmaps[i].getWidth() / 10; // Change these values as needed
+            int height = enemyBitmaps[i].getHeight() / 10; // Change these values as needed
+            enemyBitmaps[i] = Bitmap.createScaledBitmap(enemyBitmaps[i], width, height, true);
+        }
+
+        enemySpawner.setEnemyBitmaps(enemyBitmaps);
+    }
+
     public class PlayerView extends View {
         private float playerX;
         private float playerY;
@@ -52,8 +74,12 @@ public class MainActivity extends AppCompatActivity {
 
         private void init() {
             setBackgroundColor(Color.TRANSPARENT);
+
             // Load the player image
             playerBitmap = BitmapFactory.decodeResource(getResources(), R.drawable.player_image);
+
+            // Initialize paint
+            paint = new Paint();
         }
 
         @Override
@@ -67,13 +93,18 @@ public class MainActivity extends AppCompatActivity {
 
         @Override
         protected void onDraw(Canvas canvas) {
+            super.onDraw(canvas);
+
+            // Draw the player
+            canvas.drawBitmap(playerBitmap, playerX - playerBitmap.getWidth() / 2, playerY - playerBitmap.getHeight() / 2, null);
+
             // Draw the bullets
             for (Bullet bullet : bullets) {
                 bullet.move();
                 canvas.drawCircle(bullet.getX(), bullet.getY(), 10, paint);
             }
 
-             // Draw the health
+            // Draw the health
             paint.setColor(Color.WHITE);
             paint.setTextSize(50);
             canvas.drawText("Health: " + health, 50, 50, paint);
@@ -135,26 +166,5 @@ public class MainActivity extends AppCompatActivity {
         public float getY() {
             return y;
         }
-    }
-
-    private EnemySpawner enemySpawner;
-
-    private void setupEnemySpawner() {
-        enemySpawner = new EnemySpawner(this, null);
-        setContentView(enemySpawner);
-
-        Bitmap[] enemyBitmaps = {
-                BitmapFactory.decodeResource(getResources(), R.drawable.enemy1),
-                BitmapFactory.decodeResource(getResources(), R.drawable.enemy2),
-                BitmapFactory.decodeResource(getResources(), R.drawable.enemy3)
-        };
-        // Scale down the bitmaps
-        for (int i = 0; i < enemyBitmaps.length; i++) {
-            int width = enemyBitmaps[i].getWidth() / 10; // Change these values as needed
-            int height = enemyBitmaps[i].getHeight() / 10; // Change these values as needed
-            enemyBitmaps[i] = Bitmap.createScaledBitmap(enemyBitmaps[i], width, height, true);
-        }
-
-        enemySpawner.setEnemyBitmaps(enemyBitmaps);
     }
 }
