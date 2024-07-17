@@ -9,9 +9,8 @@ import android.graphics.Paint;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;
-import com.zybooks.starsurge.EnemySpawner;
 import androidx.appcompat.app.AppCompatActivity;
-
+import android.widget.FrameLayout;
 import android.os.Bundle;
 
 import java.util.ArrayList;
@@ -23,8 +22,12 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.start_screen);
+        setContentView(R.layout.activity_main);
+
+        FrameLayout container = findViewById(R.id.player_view_container);
         playerView = new PlayerView(this);
+        container.addView(playerView);
+
         setupEnemySpawner();
     }
 
@@ -48,10 +51,7 @@ public class MainActivity extends AppCompatActivity {
         }
 
         private void init() {
-            paint = new Paint();
-            paint.setColor(Color.RED);
-            paint.setStyle(Paint.Style.FILL);
-
+            setBackgroundColor(Color.TRANSPARENT);
             // Load the player image
             playerBitmap = BitmapFactory.decodeResource(getResources(), R.drawable.player_image);
         }
@@ -67,19 +67,13 @@ public class MainActivity extends AppCompatActivity {
 
         @Override
         protected void onDraw(Canvas canvas) {
-            super.onDraw(canvas);
-            canvas.drawColor(Color.BLACK);
-
-            // Draw the player
-            canvas.drawBitmap(playerBitmap, playerX - playerBitmap.getWidth() / 2, playerY - playerBitmap.getHeight() / 2, null);
-
             // Draw the bullets
             for (Bullet bullet : bullets) {
                 bullet.move();
                 canvas.drawCircle(bullet.getX(), bullet.getY(), 10, paint);
             }
 
-            // Draw the health
+             // Draw the health
             paint.setColor(Color.WHITE);
             paint.setTextSize(50);
             canvas.drawText("Health: " + health, 50, 50, paint);

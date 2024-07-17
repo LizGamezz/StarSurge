@@ -3,6 +3,7 @@ package com.zybooks.starsurge;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
+import android.graphics.Color;
 import android.os.Handler;
 import android.util.AttributeSet;
 import android.view.View;
@@ -33,6 +34,7 @@ public class EnemySpawner extends View {
     }
 
     private void init() {
+        setBackgroundColor(Color.TRANSPARENT);
         enemies = new ArrayList<>();
         random = new Random();
         handler = new Handler();

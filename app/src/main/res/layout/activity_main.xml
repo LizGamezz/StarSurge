@@ -4,7 +4,13 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/space_background"
-    tools:context=".MainActivity">
+    tools:context=".MainActivity"
+    android:background="@drawable/space_background">
+
+    <FrameLayout
+        android:id="@+id/player_view_container"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@drawable/space_background"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
