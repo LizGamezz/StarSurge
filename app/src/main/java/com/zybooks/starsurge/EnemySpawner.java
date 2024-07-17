@@ -1,32 +1,29 @@
+// EnemySpawner.java
 package com.zybooks.starsurge;
 
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
-import android.graphics.Color;
+import android.graphics.Paint;
 import android.os.Handler;
 import android.util.AttributeSet;
 import android.view.View;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
-import android.util.DisplayMetrics;
-import android.view.WindowManager;
 
 public class EnemySpawner extends View {
     private List<Enemy> enemies;
-    private Bitmap[] enemyBitmaps; // Array of enemy bitmaps
-    private float minSpawnInterval = 3000; // Minimum time interval between spawns (ms)
-    private float maxSpawnInterval = 6000; // Maximum time interval between spawns (ms)
-    private float spawnAreaMinX = 0; // Minimum x-coordinate for spawn area
-    private float spawnAreaMaxX; // Maximum x-coordinate for spawn area
-    private float spawnY = 0; // Fixed y-coordinate for spawning
-    private float enemySpeed = 5f; // Speed at which the enemy moves down
-    private float despawnY; // Y-coordinate at which enemies despawn
-
-    private Handler handler;
-    private Runnable spawnRunnable;
+    private Bitmap[] enemyBitmaps;
+    private Paint paint;
     private Random random;
+    private Handler handler;
+
+    public EnemySpawner(Context context) {
+        super(context);
+        init();
+    }
 
     public EnemySpawner(Context context, AttributeSet attrs) {
         super(context, attrs);
@@ -34,25 +31,31 @@ public class EnemySpawner extends View {
     }
 
     private void init() {
-        setBackgroundColor(Color.TRANSPARENT);
         enemies = new ArrayList<>();
+        paint = new Paint();
         random = new Random();
         handler = new Handler();
+        handler.postDelayed(spawnRunnable, 1000); // Initial delay of 1 second
+    }
 
-        spawnAreaMaxX = getResources().getDisplayMetrics().widthPixels;
-        spawnY = 0;
-        despawnY = getResources().getDisplayMetrics().heightPixels;
+    public void setEnemyBitmaps(Bitmap[] bitmaps) {
+        enemyBitmaps = bitmaps;
+    }
 
-        spawnRunnable = new Runnable() {
-            @Override
-            public void run() {
-                spawnEnemy();
-                setRandomSpawnInterval();
-                handler.postDelayed(this, (long) getRandomSpawnInterval());
-            }
-        };
+    private Runnable spawnRunnable = new Runnable() {
+        @Override
+        public void run() {
+            spawnEnemy();
+            handler.postDelayed(this, 1000); // Spawn enemy every second
+        }
+    };
 
-        handler.post(spawnRunnable);
+    private void spawnEnemy() {
+        if (enemyBitmaps != null) {
+            int x = random.nextInt(getWidth() - enemyBitmaps[0].getWidth());
+            Bitmap bitmap = enemyBitmaps[random.nextInt(enemyBitmaps.length)];
+            enemies.add(new Enemy(x, 0, bitmap));
+        }
     }
 
     @Override
@@ -60,41 +63,30 @@ public class EnemySpawner extends View {
         super.onDraw(canvas);
 
         for (Enemy enemy : enemies) {
-            enemy.update();
-            enemy.draw(canvas);
-
-            if (enemy.isOffScreen()) {
-                enemies.remove(enemy);
-            }
+            enemy.move();
+            enemy.draw(canvas, paint);
         }
 
-        invalidate();
+        invalidate(); // Redraw the view
     }
 
-    private void spawnEnemy() {
-        int randomIndex = random.nextInt(enemyBitmaps.length);
-        Bitmap randomEnemyBitmap = enemyBitmaps[randomIndex];
+    private class Enemy {
+        private int x, y;
+        private Bitmap bitmap;
+        private int speed = 5;
 
-        // Get the screen width
-        DisplayMetrics displayMetrics = new DisplayMetrics();
-        ((WindowManager) getContext().getSystemService(Context.WINDOW_SERVICE)).getDefaultDisplay().getMetrics(displayMetrics);
-        float screenWidth = displayMetrics.widthPixels;
+        public Enemy(int x, int y, Bitmap bitmap) {
+            this.x = x;
+            this.y = y;
+            this.bitmap = bitmap;
+        }
 
-        // Calculate a random x-coordinate for spawning
-        float spawnX = random.nextFloat() * screenWidth;
+        public void move() {
+            y += speed;
+        }
 
-        enemies.add(new Enemy(randomEnemyBitmap, spawnX, spawnY, enemySpeed, despawnY));
-    }
-
-    private void setRandomSpawnInterval() {
-        handler.postDelayed(spawnRunnable, (long) getRandomSpawnInterval());
-    }
-
-    private float getRandomSpawnInterval() {
-        return minSpawnInterval + random.nextFloat() * (maxSpawnInterval - minSpawnInterval);
-    }
-
-    public void setEnemyBitmaps(Bitmap[] enemyBitmaps) {
-        this.enemyBitmaps = enemyBitmaps;
+        public void draw(Canvas canvas, Paint paint) {
+            canvas.drawBitmap(bitmap, x, y, paint);
+        }
     }
 }

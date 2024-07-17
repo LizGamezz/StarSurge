@@ -24,18 +24,17 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        FrameLayout container = findViewById(R.id.player_view_container);
+        FrameLayout playerContainer = findViewById(R.id.player_view_container);
         playerView = new PlayerView(this);
-        container.addView(playerView);
+        playerContainer.addView(playerView);
 
         setupEnemySpawner();
     }
 
     private void setupEnemySpawner() {
-        // Initialize enemy spawner
-        EnemySpawner enemySpawner = new EnemySpawner(this, null);
-        FrameLayout container = findViewById(R.id.enemy_view_container);
-        container.addView(enemySpawner);
+        EnemySpawner enemySpawner = new EnemySpawner(this);
+        FrameLayout enemyContainer = findViewById(R.id.enemy_view_container);
+        enemyContainer.addView(enemySpawner);
 
         Bitmap[] enemyBitmaps = {
                 BitmapFactory.decodeResource(getResources(), R.drawable.enemy1),
@@ -43,10 +42,9 @@ public class MainActivity extends AppCompatActivity {
                 BitmapFactory.decodeResource(getResources(), R.drawable.enemy3)
         };
 
-        // Scale down the bitmaps
         for (int i = 0; i < enemyBitmaps.length; i++) {
-            int width = enemyBitmaps[i].getWidth() / 10; // Change these values as needed
-            int height = enemyBitmaps[i].getHeight() / 10; // Change these values as needed
+            int width = enemyBitmaps[i].getWidth() / 10;
+            int height = enemyBitmaps[i].getHeight() / 10;
             enemyBitmaps[i] = Bitmap.createScaledBitmap(enemyBitmaps[i], width, height, true);
         }
 
@@ -60,7 +58,7 @@ public class MainActivity extends AppCompatActivity {
         private int health = 100;
         private Paint paint;
         private List<Bullet> bullets = new ArrayList<>();
-        private Bitmap playerBitmap; // New field for the player image
+        private Bitmap playerBitmap;
 
         public PlayerView(Context context) {
             super(context);
@@ -74,19 +72,13 @@ public class MainActivity extends AppCompatActivity {
 
         private void init() {
             setBackgroundColor(Color.TRANSPARENT);
-
-            // Load the player image
             playerBitmap = BitmapFactory.decodeResource(getResources(), R.drawable.player_image);
-
-            // Initialize paint
             paint = new Paint();
         }
 
         @Override
         protected void onSizeChanged(int w, int h, int oldw, int oldh) {
             super.onSizeChanged(w, h, oldw, oldh);
-
-            // Set the initial player position to the center bottom of the screen
             playerX = w / 2f;
             playerY = h - playerBitmap.getHeight() / 2f;
         }
@@ -94,17 +86,13 @@ public class MainActivity extends AppCompatActivity {
         @Override
         protected void onDraw(Canvas canvas) {
             super.onDraw(canvas);
-
-            // Draw the player
             canvas.drawBitmap(playerBitmap, playerX - playerBitmap.getWidth() / 2, playerY - playerBitmap.getHeight() / 2, null);
 
-            // Draw the bullets
             for (Bullet bullet : bullets) {
                 bullet.move();
                 canvas.drawCircle(bullet.getX(), bullet.getY(), 10, paint);
             }
 
-            // Draw the health
             paint.setColor(Color.WHITE);
             paint.setTextSize(50);
             canvas.drawText("Health: " + health, 50, 50, paint);
@@ -132,7 +120,6 @@ public class MainActivity extends AppCompatActivity {
         public void takeDamage(int damage) {
             health -= damage;
             if (health <= 0) {
-                // Implement game over logic here (e.g., restart level, show game over screen, etc.)
                 health = 0;
                 invalidate();
             }
