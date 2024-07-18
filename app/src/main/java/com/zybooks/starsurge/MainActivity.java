@@ -12,29 +12,38 @@ import android.view.View;
 import androidx.appcompat.app.AppCompatActivity;
 import android.widget.FrameLayout;
 import android.os.Bundle;
+import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.List;
-
 public class MainActivity extends AppCompatActivity {
     private PlayerView playerView;
+    private TextView scoreBoard;
+    private int score = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        FrameLayout playerContainer = findViewById(R.id.player_view_container);
+        // Initialize PlayerView
+        FrameLayout container = findViewById(R.id.player_view_container);
         playerView = new PlayerView(this);
-        playerContainer.addView(playerView);
+        container.addView(playerView);
 
+        // Initialize EnemySpawner
         setupEnemySpawner();
+
+        // Initialize Scoreboard
+        scoreBoard = findViewById(R.id.score_board);
+        updateScoreboard();
     }
 
     private void setupEnemySpawner() {
-        EnemySpawner enemySpawner = new EnemySpawner(this);
-        FrameLayout enemyContainer = findViewById(R.id.enemy_view_container);
-        enemyContainer.addView(enemySpawner);
+        // Initialize enemy spawner
+        EnemySpawner enemySpawner = new EnemySpawner(this, null);
+        FrameLayout container = findViewById(R.id.enemy_view_container);
+        container.addView(enemySpawner);
 
         Bitmap[] enemyBitmaps = {
                 BitmapFactory.decodeResource(getResources(), R.drawable.enemy1),
@@ -42,15 +51,28 @@ public class MainActivity extends AppCompatActivity {
                 BitmapFactory.decodeResource(getResources(), R.drawable.enemy3)
         };
 
+        // Scale down the bitmaps
         for (int i = 0; i < enemyBitmaps.length; i++) {
-            int width = enemyBitmaps[i].getWidth() / 10;
-            int height = enemyBitmaps[i].getHeight() / 10;
+            int width = enemyBitmaps[i].getWidth() / 10; // Change these values as needed
+            int height = enemyBitmaps[i].getHeight() / 10; // Change these values as needed
             enemyBitmaps[i] = Bitmap.createScaledBitmap(enemyBitmaps[i], width, height, true);
         }
 
         enemySpawner.setEnemyBitmaps(enemyBitmaps);
     }
 
+    // Method to update the scoreboard text
+    private void updateScoreboard() {
+        scoreBoard.setText("Score: " + score);
+    }
+
+    // Method to increment the score
+    public void incrementScore(int points) {
+        score += points;
+        updateScoreboard();
+    }
+
+    // Inner class for PlayerView
     public class PlayerView extends View {
         private float playerX;
         private float playerY;
@@ -58,7 +80,7 @@ public class MainActivity extends AppCompatActivity {
         private int health = 100;
         private Paint paint;
         private List<Bullet> bullets = new ArrayList<>();
-        private Bitmap playerBitmap;
+        private Bitmap playerBitmap; // New field for the player image
 
         public PlayerView(Context context) {
             super(context);
@@ -72,13 +94,19 @@ public class MainActivity extends AppCompatActivity {
 
         private void init() {
             setBackgroundColor(Color.TRANSPARENT);
+
+            // Load the player image
             playerBitmap = BitmapFactory.decodeResource(getResources(), R.drawable.player_image);
+
+            // Initialize paint
             paint = new Paint();
         }
 
         @Override
         protected void onSizeChanged(int w, int h, int oldw, int oldh) {
             super.onSizeChanged(w, h, oldw, oldh);
+
+            // Set the initial player position to the center bottom of the screen
             playerX = w / 2f;
             playerY = h - playerBitmap.getHeight() / 2f;
         }
@@ -86,13 +114,17 @@ public class MainActivity extends AppCompatActivity {
         @Override
         protected void onDraw(Canvas canvas) {
             super.onDraw(canvas);
+
+            // Draw the player
             canvas.drawBitmap(playerBitmap, playerX - playerBitmap.getWidth() / 2, playerY - playerBitmap.getHeight() / 2, null);
 
+            // Draw the bullets
             for (Bullet bullet : bullets) {
                 bullet.move();
                 canvas.drawCircle(bullet.getX(), bullet.getY(), 10, paint);
             }
 
+            // Draw the health
             paint.setColor(Color.WHITE);
             paint.setTextSize(50);
             canvas.drawText("Health: " + health, 50, 50, paint);
@@ -120,6 +152,7 @@ public class MainActivity extends AppCompatActivity {
         public void takeDamage(int damage) {
             health -= damage;
             if (health <= 0) {
+                // Implement game over logic here (e.g., restart level, show game over screen, etc.)
                 health = 0;
                 invalidate();
             }
@@ -131,6 +164,7 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    // Inner class for Bullet
     public class Bullet {
         private float x;
         private float y;
