@@ -4,4 +4,10 @@
     <string name="start_button">Start</string>
     <string name="credits">StarSurge is an app designed and developed by Caleb Busboom, John-Mark Foster, Kevin Mendoza, and Elisabeth Sexton."</string>
     <string name="enemy1">enemy1</string>
+    <string name="Score" />
+    <string name="GameOver"/>
+    <string name="player"/>
+    <string name="heart"/>
+    <string name="Replay">Replay</string>
+    <string name="Menu">Menu</string>
 </resources>

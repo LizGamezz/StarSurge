@@ -22,7 +22,7 @@
 
     <ImageButton
         android:id="@+id/startButton"
-        style="@style/StartButton"
+        style="@style/Button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_margin="0dp"
@@ -38,7 +38,7 @@
 
     <ImageButton
         android:id="@+id/creditsButton"
-        style="@style/StartButton"
+        style="@style/Button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_margin="20dp"

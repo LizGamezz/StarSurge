@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- LIZ - LAYOUT FOR GAMEOVER ACTIVITY -->
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/space_background"
+    tools:context=".GameOver">
+
+    <!-- For the Game Over Image -->
+    <ImageView
+        android:id="@+id/gameOver"
+        android:layout_width="300dp"
+        android:layout_height="200dp"
+        android:layout_margin="20dp"
+        android:contentDescription="@string/GameOver"
+        android:src="@drawable/game_over"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <!-- For the Score Image -->
+    <ImageView
+        android:id="@+id/score"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="50dp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/gameOver"
+        android:contentDescription="@string/Score"
+        android:src="@drawable/score" />
+
+    <TextView
+        android:id="@+id/scoreText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="10dp"
+        android:text="0"
+        android:textColor="@color/white"
+        android:textSize="60sp"
+        android:textStyle="bold"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/score" />
+
+    <!-- For the Replay Button -->
+    <ImageButton
+        android:id="@+id/replayButton"
+        style="@style/Button"
+        android:layout_margin="120dp"
+        android:background="@drawable/rounded_corners"
+        android:contentDescription="@string/Replay"
+        android:onClick="onReplayClick"
+        android:src="@drawable/replay"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/score" />
+
+    <!-- For the Menu Button -->
+    <ImageButton
+        android:id="@+id/menuButton"
+        style="@style/Button"
+        android:layout_margin="20dp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/replayButton"
+        android:contentDescription="@string/Menu"
+        android:src="@drawable/menu"
+        android:background="@drawable/rounded_corners"
+        android:onClick="onMenuClick"/>
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>
