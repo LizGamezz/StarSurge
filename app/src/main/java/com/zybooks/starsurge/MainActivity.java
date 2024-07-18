@@ -62,7 +62,7 @@ public class MainActivity extends AppCompatActivity {
         }
 
         private void init(Context context) {
-            setBackgroundColor(Color.TRANSPARENT);
+            setBackgroundColor(Color.TRANSPARENT); // Ensure transparency
 
             // Load and scale the player bitmap
             Bitmap originalPlayerBitmap = BitmapFactory.decodeResource(context.getResources(), R.drawable.playership);
@@ -163,6 +163,22 @@ public class MainActivity extends AppCompatActivity {
         public int getBulletHeight() {
             return bulletBitmap.getHeight();
         }
+
+        public float getPlayerX() {
+            return playerX;
+        }
+
+        public float getPlayerY() {
+            return playerY;
+        }
+
+        public float getPlayerWidth() {
+            return playerBitmap.getWidth();
+        }
+
+        public float getPlayerHeight() {
+            return playerBitmap.getHeight();
+        }
     }
 
     public class Bullet {
@@ -223,6 +239,21 @@ public class MainActivity extends AppCompatActivity {
             return bulletRight > enemyLeft && bulletLeft < enemyRight &&
                     bulletBottom > enemyTop && bulletTop < enemyBottom;
         }
+
+        public boolean checkPlayerCollision(float playerX, float playerY, float playerWidth, float playerHeight) {
+            float playerLeft = playerX - playerWidth / 2;
+            float playerRight = playerX + playerWidth / 2;
+            float playerTop = playerY - playerHeight / 2;
+            float playerBottom = playerY + playerHeight / 2;
+
+            float enemyLeft = x - image.getWidth() / 2;
+            float enemyRight = x + image.getWidth() / 2;
+            float enemyTop = y - image.getHeight() / 2;
+            float enemyBottom = y + image.getHeight() / 2;
+
+            return playerRight > enemyLeft && playerLeft < enemyRight &&
+                    playerBottom > enemyTop && playerTop < enemyBottom;
+        }
     }
 
     public class EnemySpawner extends View {
@@ -244,7 +275,7 @@ public class MainActivity extends AppCompatActivity {
         }
 
         private void init(Context context) {
-            setBackgroundColor(Color.TRANSPARENT);
+            setBackgroundColor(Color.TRANSPARENT); // Ensure transparency
 
             Bitmap originalEnemy1 = BitmapFactory.decodeResource(context.getResources(), R.drawable.enemy1);
             Bitmap originalEnemy2 = BitmapFactory.decodeResource(context.getResources(), R.drawable.enemy2);
@@ -294,6 +325,7 @@ public class MainActivity extends AppCompatActivity {
                 enemy.move();
                 enemy.draw(canvas);
 
+                // Check for collision with bullets
                 Iterator<Bullet> bulletIterator = playerView.getBullets().iterator();
                 while (bulletIterator.hasNext()) {
                     Bullet bullet = bulletIterator.next();
@@ -302,6 +334,13 @@ public class MainActivity extends AppCompatActivity {
                         enemyIterator.remove();
                         break;
                     }
+                }
+
+                // Check for collision with player
+                if (enemy.checkPlayerCollision(playerView.getPlayerX(), playerView.getPlayerY(), playerView.getPlayerWidth(), playerView.getPlayerHeight())) {
+                    playerView.takeDamage(10);
+                    enemyIterator.remove();
+                    break;
                 }
             }
             invalidate();  // Continuously redraw to move enemies and check for collisions
