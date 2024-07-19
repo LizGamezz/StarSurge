@@ -1,6 +1,7 @@
 package com.zybooks.starsurge;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
@@ -13,6 +14,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import androidx.appcompat.app.AppCompatActivity;
 import android.widget.FrameLayout;
+import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -21,6 +23,9 @@ import java.util.List;
 public class MainActivity extends AppCompatActivity {
     private PlayerView playerView;
     private EnemySpawner enemySpawner;
+    //Scoreboard
+    private TextView scoreBoard;
+    private int score = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,6 +37,10 @@ public class MainActivity extends AppCompatActivity {
         playerContainer.addView(playerView);
 
         setupEnemySpawner();
+
+        // initialize scoreboard
+        scoreBoard = findViewById(R.id.score_board);
+        updateScoreboard();
     }
 
     private void setupEnemySpawner() {
@@ -39,11 +48,20 @@ public class MainActivity extends AppCompatActivity {
         enemySpawner = new EnemySpawner(this);
         enemyContainer.addView(enemySpawner);
     }
+    //Update Scoreboard
+    private void updateScoreboard() {
+        scoreBoard.setText("Score: " + score);
+    }
+
+    // Increment scoreboard
+    public void incrementScore(int points) {
+        score += points;
+        updateScoreboard();
+    }
 
     public class PlayerView extends View {
         private float playerX;
         private float playerY;
-        private int health = 100;
         private Paint paint;
         private List<Bullet> bullets = new ArrayList<>();
         private Bitmap playerBitmap;
@@ -100,10 +118,6 @@ public class MainActivity extends AppCompatActivity {
             for (Bullet bullet : bullets) {
                 canvas.drawBitmap(bulletBitmap, bullet.getX() - bulletBitmap.getWidth() / 2, bullet.getY() - bulletBitmap.getHeight() / 2, null);
             }
-
-            paint.setColor(Color.WHITE);
-            paint.setTextSize(50);
-            canvas.drawText("Health: " + health, 50, 50, paint);
         }
 
         @Override
@@ -137,14 +151,6 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
             invalidate(); // Redraw the view to show updated bullet positions
-        }
-
-        public void takeDamage(int damage) {
-            health -= damage;
-            if (health <= 0) {
-                health = 0;
-                invalidate();
-            }
         }
 
         public void movePlayer(float dx) {
@@ -281,7 +287,7 @@ public class MainActivity extends AppCompatActivity {
             Bitmap originalEnemy2 = BitmapFactory.decodeResource(context.getResources(), R.drawable.enemy2);
             Bitmap originalEnemy3 = BitmapFactory.decodeResource(context.getResources(), R.drawable.enemy3);
 
-            enemyBitmaps = new Bitmap[] {
+            enemyBitmaps = new Bitmap[]{
                     Bitmap.createScaledBitmap(originalEnemy1, originalEnemy1.getWidth() / 10, originalEnemy1.getHeight() / 10, true),
                     Bitmap.createScaledBitmap(originalEnemy2, originalEnemy2.getWidth() / 10, originalEnemy2.getHeight() / 10, true),
                     Bitmap.createScaledBitmap(originalEnemy3, originalEnemy3.getWidth() / 10, originalEnemy3.getHeight() / 10, true)
@@ -332,14 +338,19 @@ public class MainActivity extends AppCompatActivity {
                     if (enemy.checkCollision(bullet.getX(), bullet.getY(), playerView.getBulletWidth(), playerView.getBulletHeight())) {
                         bulletIterator.remove();
                         enemyIterator.remove();
+                        incrementScore(10);
                         break;
                     }
                 }
 
                 // Check for collision with player
                 if (enemy.checkPlayerCollision(playerView.getPlayerX(), playerView.getPlayerY(), playerView.getPlayerWidth(), playerView.getPlayerHeight())) {
-                    playerView.takeDamage(10);
                     enemyIterator.remove();
+
+                    // Navigate to GameOver activity
+                    Intent intent = new Intent(getContext(), GameOver.class);
+                    intent.putExtra("SCORE", score); // Bringing the score to end screen
+                    getContext().startActivity(intent);
                     break;
                 }
             }

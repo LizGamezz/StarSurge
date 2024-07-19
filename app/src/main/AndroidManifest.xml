@@ -29,6 +29,7 @@
             android:name=".Credits"
             android:exported="false"
             android:screenOrientation="portrait" />
+        <activity android:name=".GameOver" />
     </application>
 
 </manifest>
